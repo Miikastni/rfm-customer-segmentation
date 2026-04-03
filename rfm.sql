@@ -41,7 +41,7 @@ FROM rfm_scores;
 SELECT
     rfm_segment,
     COUNT(*) AS users_count
-FROM rfm
+FROM rfm_final
 GROUP BY rfm_segment
 ORDER BY users_count DESC;
 
@@ -54,7 +54,7 @@ LIMIT 10;
 -- Худшие клиенты
 SELECT *
 FROM rfm
-ORDER BY rfm_score ASC
+ORDER BY r_score + f_score + m_score DESC
 LIMIT 10;
 
 -- Средние показатели по сегментам 
