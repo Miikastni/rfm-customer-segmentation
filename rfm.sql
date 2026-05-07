@@ -25,7 +25,7 @@ FROM rfm_base;
 CREATE TABLE rfm_scores AS
 SELECT
     *,
-    NTILE(5) OVER (ORDER BY recency DESC) AS r_score,
+    NTILE(5) OVER (ORDER BY recency) AS r_score,
     NTILE(5) OVER (ORDER BY frequency) AS f_score,
     NTILE(5) OVER (ORDER BY monetary) AS m_score
 FROM rfm;
@@ -48,13 +48,13 @@ ORDER BY users_count DESC;
 -- Топ клиенты (лучшие)
 SELECT *
 FROM rfm
-ORDER BY rfm_score DESC
+ORDER BY r_score + f_score + m_score DESC
 LIMIT 10;
 
 -- Худшие клиенты
 SELECT *
 FROM rfm
-ORDER BY r_score + f_score + m_score DESC
+ORDER BY r_score + f_score + m_score 
 LIMIT 10;
 
 -- Средние показатели по сегментам 
@@ -63,14 +63,14 @@ SELECT
     ROUND(AVG(recency), 2 ) AS avg_recency, 
     ROUND(AVG(frequency), 2 ) AS avg_frequency, 
     ROUND(AVG(monetary), 2 ) AS avg_monetary 
-FROM rfm 
+FROM rfm_final
 GROUP BY rfm_segment ORDER BY avg_monetary DESC ; 
 
 -- Вклад сегментов в выручку
 SELECT
     rfm_segment,
     SUM(monetary) AS total_revenue
-FROM rfm
+FROM rfm_final
 GROUP BY rfm_segment
 ORDER BY total_revenue DESC;
 
@@ -78,6 +78,6 @@ ORDER BY total_revenue DESC;
 SELECT
     rfm_segment,
     COUNT(*) * 100.0 / SUM(COUNT(*)) OVER () AS percent
-FROM rfm
+FROM rfm_final
 GROUP BY rfm_segment
 ORDER BY percent DESC;
