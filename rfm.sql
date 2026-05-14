@@ -47,13 +47,13 @@ ORDER BY users_count DESC;
 
 -- Топ клиенты (лучшие)
 SELECT *
-FROM rfm
+FROM rfm_final
 ORDER BY r_score + f_score + m_score DESC
 LIMIT 10;
 
 -- Худшие клиенты
 SELECT *
-FROM rfm
+FROM rfm_final
 ORDER BY r_score + f_score + m_score 
 LIMIT 10;
 
